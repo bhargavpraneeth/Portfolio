@@ -44,7 +44,11 @@ a { color: inherit; }
 .bar nav { display: flex; gap: 22px; }
 .bar nav a { font: 400 12px var(--mono); color: var(--mute); text-decoration: none; letter-spacing: .04em; }
 .bar nav a:hover { color: var(--amber); }
-@media (max-width: 760px) { .bar nav { display: none; } }
+@media (max-width: 760px) {
+  .bar .wrap { flex-wrap: wrap; gap: 6px 16px; padding-block: 10px 8px; }
+  .bar nav { order: 3; flex: 0 0 100%; gap: 20px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding-bottom: 4px; }
+  .bar nav::-webkit-scrollbar { display: none; }
+}
 
 /* hero */
 .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -224,6 +228,10 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
 .seg.civ .b { background: repeating-linear-gradient(90deg, var(--text) 0 6px, transparent 6px 10px); height: 10px; }
 .seg.civ .t { color: var(--text); }
 .seg.now .b { box-shadow: 0 0 0 4px var(--amber-soft); }
+.lane.tall { height: 74px; }
+.seg.role .b { width: calc(100% - 2px); }
+.seg.t2 .t { top: 32px; }
+.seg.t3 .t { top: 50px; }
 .seg .d { width: 12px; height: 12px; border-radius: 50%; background: var(--ink); border: 2px solid var(--text); margin-left: -6px; margin-top: -1px; }
 .geo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; }
 .geo .g { border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; background: var(--panel); }
@@ -904,13 +912,19 @@ footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; g
     h += '</div>';
     function seg(a, b, t, cls) { return '<div class="seg ' + (cls || '') + '" style="left:' + p(a) + ';width:' + w(a, b) + '" title="' + t + '"><div class="b"></div><div class="t">' + t + '</div></div>'; }
     function dot(y, t) { return '<div class="seg" style="left:' + p(y) + '"><div class="d"></div><div class="t" style="left:-6px">' + t + '</div></div>'; }
-    function row(label, lanes) { return '<div class="track-row"><div class="lab">' + label + '</div>' + lanes.map(function (l) { return '<div class="lane">' + l + '</div>'; }).join('') + '</div>'; }
+    function row(label, lanes, lc) { return '<div class="track-row"><div class="lab">' + label + '</div>' + lanes.map(function (l) { return '<div class="lane' + (lc ? ' ' + lc : '') + '">' + l + '</div>'; }).join('') + '</div>'; }
     h += row('Degrees', [dot(2015.3, 'B.Tech') + dot(2016.8, 'MS, FIU') + dot(2023.8, 'PG, IIITH')]);
+    /* Roles: one sequential lane, dates match the Experience list; labels staggered on two tiers so none collide */
     h += row('Roles', [
-      seg(2016.95, 2018.3, 'Data Scientist') + seg(2019.45, 2022.3, 'Senior Data Scientist') + seg(2023.0, 2024.4, 'Lead Software Engineer') + seg(2026.67, 2026.9, 'Head of Tech, ITHI', 'now r'),
-      seg(2018.35, 2019.2, 'PM, DFPS') + seg(2022.35, 2023.0, 'Senior Business Consultant') + seg(2025.1, 2026.65, 'AI Business Analyst')
-    ]);
-    h += row('Parallel', [seg(2019.0, 2023.0, 'UPSC Civil Services preparation · Preliminary cleared', 'civ')]);
+      seg(2016.92, 2018.33, 'Data Scientist', 'role') +
+      seg(2018.33, 2019.17, 'PM, DFPS', 'role t2') +
+      seg(2019.42, 2022.33, 'Senior Data Scientist', 'role') +
+      seg(2022.33, 2023.0, 'Senior Consultant', 'role') +
+      seg(2023.0, 2024.42, 'Lead Software Engineer', 'role t2') +
+      seg(2025.08, 2026.67, 'AI Business Analyst', 'role') +
+      seg(2026.67, 2026.88, 'Head of Tech, ITHI', 'role now r t3')
+    ], 'tall');
+    h += row('Parallel', [seg(2019.0, 2022.0, 'UPSC Civil Services preparation · Preliminary cleared', 'civ')]);
     h += row('Places', [
       seg(2015.0, 2017.0, 'Miami, FL', 'loc') + seg(2017.05, 2018.3, 'Calif.', 'loc') + seg(2018.35, 2019.2, 'Austin', 'loc') + seg(2019.45, 2021.0, 'Hyderabad', 'loc') + seg(2021.0, 2022.3, 'Pune', 'loc') + seg(2022.35, 2023.0, 'BLR', 'loc') + seg(2023.05, 2026.9, 'Hyderabad', 'loc')
     ]);
